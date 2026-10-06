@@ -1255,7 +1255,7 @@
       "securityWarnings": "Security warnings",
       "panelExposed": "Your panel may be exposed:",
       "warnHttp": "Panel is served over plain HTTP — set up TLS for production.",
-      "warnDefaultPort": "Default port 2053 is well-known — change it to a random port.",
+      "warnDefaultPort": "Default port 8080 is widely known — change it to a random port.",
       "warnDefaultBasePath": "Default base path \"/\" is well-known — change it to a random path.",
       "warnDefaultSubPath": "Default subscription path \"/sub/\" is well-known — change it.",
       "warnDefaultJsonPath": "Default JSON subscription path \"/json/\" is well-known — change it.",
