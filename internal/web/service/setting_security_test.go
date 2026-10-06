@@ -46,8 +46,8 @@ func TestResetSettingsRegeneratesSubscriptionPaths(t *testing.T) {
 	if paths["subPath"] == paths["subJsonPath"] || paths["subPath"] == paths["subClashPath"] || paths["subJsonPath"] == paths["subClashPath"] {
 		t.Fatalf("subscription paths must be distinct: %v", paths)
 	}
-	if port, err := s.GetPort(); err != nil || port != 2053 {
-		t.Fatalf("web port after reset = %d, %v; want 2053", port, err)
+	if port, err := s.GetPort(); err != nil || port != 8080 {
+		t.Fatalf("web port after reset = %d, %v; want 8080", port, err)
 	}
 }
 

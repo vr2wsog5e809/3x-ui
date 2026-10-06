@@ -72,7 +72,7 @@ var defaultValueMap = map[string]string{
 	"nodeMtlsClientKeyPem":        "",
 	"nodeMtlsClientCertSha256":    "",
 	"nodeMtlsClientCAPem":         "",
-	"webBasePath":                 normalizeBasePath(getEnv("XUI_INIT_WEB_BASE_PATH", "/")),
+	"webBasePath":                 normalizeBasePath(getEnv("XUI_INIT_WEB_BASE_PATH", "/panel/")),
 	"sessionMaxAge":               "360",
 	"trustedProxyCIDRs":           DefaultTrustedProxyCIDRs,
 	"realityScanCandidates":       DefaultRealityScanCandidatesCSV,
