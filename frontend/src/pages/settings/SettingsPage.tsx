@@ -162,7 +162,7 @@ export default function SettingsPage() {
     if (window.location.protocol !== 'https:') {
       out.push(t('pages.settings.warnHttp'));
     }
-    if (allSetting.webPort === 2053) {
+    if (allSetting.webPort === 8080) {
       out.push(t('pages.settings.warnDefaultPort'));
     }
     const segs = window.location.pathname.split('/').length < 4;
