@@ -4,10 +4,10 @@ import type { SubProfileMode } from '@/schemas/setting';
 export class AllSetting {
   webListen = '';
   webDomain = '';
-  webPort = 2053;
+  webPort = 8080;
   webCertFile = '';
   webKeyFile = '';
-  webBasePath = '/';
+  webBasePath = '/panel/';
   sessionMaxAge = 360;
   trustedProxyCIDRs = '127.0.0.1/32,::1/128';
   realityScanCandidates =
