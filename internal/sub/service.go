@@ -536,7 +536,11 @@ func (s *SubService) getSubs(subId string) ([]string, []string, int64, xray.Clie
 	}
 	slices.Sort(uniqueEmails)
 	traffic, lastOnline := s.AggregateTrafficByEmails(uniqueEmails)
-	traffic.Enable = hasEnabledClient
+	// Keep the existing per-inbound calculation, but also treat an enabled
+	// normalized client record with the same subscription ID as authoritative.
+	// This prevents the public subscription page from reporting Inactive when
+	// the panel shows the client as enabled.
+	traffic.Enable = hasEnabledClient || s.hasEnabledClientBySubID(subId)
 
 	if mode, remark := s.resolveInfoNodeRemark(subId, uniqueEmails, traffic, len(result) > 0); mode != infoNodeNone {
 		dummyLink := fmt.Sprintf("socks://127.0.0.1:1080#%s", strings.ReplaceAll(url.QueryEscape(remark), "+", "%20"))
@@ -674,6 +678,22 @@ func subscriptionExpiryFromClient(nowMs, expiryTime int64) int64 {
 		return nowMs + (-expiryTime)
 	}
 	return 0
+}
+
+func (s *SubService) hasEnabledClientBySubID(subId string) bool {
+	if strings.TrimSpace(subId) == "" {
+		return false
+	}
+	var enabled int64
+	err := database.GetDB().Model(&model.ClientRecord{}).
+		Where("sub_id = ? AND enable = ?", subId, true).
+		Limit(1).
+		Count(&enabled).Error
+	if err != nil {
+		logger.Warning("SubService - hasEnabledClientBySubID: load client state: ", err)
+		return false
+	}
+	return enabled > 0
 }
 
 func (s *SubService) getInboundsBySubId(subId string) ([]*model.Inbound, error) {
