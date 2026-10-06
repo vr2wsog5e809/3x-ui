@@ -536,13 +536,10 @@ func (s *SubService) getSubs(subId string) ([]string, []string, int64, xray.Clie
 	}
 	slices.Sort(uniqueEmails)
 	traffic, lastOnline := s.AggregateTrafficByEmails(uniqueEmails)
-
-	// The normalized clients table is the source of truth for the panel's
-	// Enabled toggle. Keep the existing per-inbound calculation for backwards
-	// compatibility, but also resolve the subscription state directly by
-	// sub_id so the public subscription page cannot report "Inactive" when
-	// the client is visibly enabled in the panel (for example after client
-	// relation/settings normalization or a multi-inbound subscription).
+	// Keep the existing per-inbound calculation, but also treat an enabled
+	// normalized client record with the same subscription ID as authoritative.
+	// This prevents the public subscription page from reporting Inactive when
+	// the panel shows the client as enabled.
 	traffic.Enable = hasEnabledClient || s.hasEnabledClientBySubID(subId)
 
 	if mode, remark := s.resolveInfoNodeRemark(subId, uniqueEmails, traffic, len(result) > 0); mode != infoNodeNone {
@@ -693,7 +690,7 @@ func (s *SubService) hasEnabledClientBySubID(subId string) bool {
 		Limit(1).
 		Count(&enabled).Error
 	if err != nil {
-		logger.Warning("SubService - hasEnabledClientBySubID: load client state:", err)
+		logger.Warning("SubService - hasEnabledClientBySubID: load client state: ", err)
 		return false
 	}
 	return enabled > 0
@@ -1558,7 +1555,11 @@ func (s *SubService) genHysteriaLink(inbound *model.Inbound, email string) strin
 			applyExternalProxyHysteriaParams(ep, epParams)
 
 			link := fmt.Sprintf("%s://%s@%s", protocol, auth, joinHostPort(dest, int(portF)))
-			links = append(links, buildLinkWithParams(link, epParams, s.endpointRemark(inbound, email, ep, "quic")))
+			// VLESS/Trojan/SS get the host's description through buildEndpointLinks;
+			// this loop renders the fragment itself, so add it here too (#6738).
+			remark := s.endpointRemark(inbound, email, ep, "quic")
+			remark = appendHappServerDescription(remark, externalProxyToEndpoint(ep).ServerDescription)
+			links = append(links, buildLinkWithParams(link, epParams, remark))
 		}
 		return strings.Join(links, "\n")
 	}
