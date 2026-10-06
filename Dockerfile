@@ -64,9 +64,6 @@ RUN chmod +x \
   /usr/bin/x-ui
 
 ENV XUI_IN_DOCKER="true"
-ENV XUI_PORT="8080"
-ENV PORT="8080"
-ENV XUI_INIT_WEB_BASE_PATH="/panel/"
 ENV XUI_MAIN_FOLDER="/app"
 ENV XUI_ENABLE_FAIL2BAN="true"
 ENV XUI_DB_TYPE=""

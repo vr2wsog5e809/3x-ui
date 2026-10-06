@@ -37,9 +37,8 @@ services:
       # XUI_MEMORY_LIMIT: "400"      # in MiB
       # GOMEMLIMIT: "400MiB"         # Go syntax, takes precedence
       # XUI_PPROF: "true"           # expose pprof on 127.0.0.1:6060 for profiling
-      XUI_INIT_WEB_BASE_PATH: "/panel/"
+      # XUI_INIT_WEB_BASE_PATH: "/panel/"
       XUI_PORT: "8080"
-      PORT: "8080"
       # To use PostgreSQL instead of the default SQLite, run:
       #   docker compose --profile postgres up -d
       # and uncomment the two lines below.
